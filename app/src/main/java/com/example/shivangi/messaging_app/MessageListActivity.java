@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class MessageListActivity extends AppCompatActivity {
         final List<BaseMessage> messageList = new ArrayList<>();
         messageList.add(new BaseMessage("Sara", "Me", "when will you be here?",
                 dateFormat.format(new Date())));
+        setTitle(messageList.get(0).sender);
 
         mMessageAdapter = new MessageListAdapter(this, messageList);
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -65,7 +67,7 @@ public class MessageListActivity extends AppCompatActivity {
             }
         });
 
-        Button voice = findViewById(R.id.button_voice);
+        ImageButton voice = findViewById(R.id.button_voice);
         voice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

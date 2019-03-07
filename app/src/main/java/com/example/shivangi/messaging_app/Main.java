@@ -44,9 +44,9 @@ public class Main extends AppCompatActivity {
 
         final ImageView imageView = findViewById(R.id.imageView1);
         final List<Drawable> images = new ArrayList<>(3);
-        images.add(getResources().getDrawable(R.drawable.img1));
-        images.add(getResources().getDrawable(R.drawable.img2));
-        images.add(getResources().getDrawable(R.drawable.img3));
+        images.add(getResources().getDrawable(R.drawable.img1min));
+        images.add(getResources().getDrawable(R.drawable.img2min));
+        images.add(getResources().getDrawable(R.drawable.img3min));
 
         final int[] cur = {1};
 

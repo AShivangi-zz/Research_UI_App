@@ -6,6 +6,20 @@
     android:background="#424242"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#dfdfdf"
+        android:layout_marginBottom="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        app:layout_constraintBottom_toTopOf="@+id/layout_chatbox"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/reyclerview_message_list"
@@ -33,43 +47,51 @@
         android:minHeight="48dp"
         android:layout_below="@id/line2">
 
+        <ImageButton
+            android:id="@+id/button_voice"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@id/edittext_chatbox"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/whitevoicerecord"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp" />
+
         <EditText
             android:id="@+id/edittext_chatbox"
-            android:hint="Enter message"
-            android:background="@android:color/transparent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
             android:layout_height="wrap_content"
-            android:maxLines="6"/>
+            android:layout_alignParentStart="true"
+            android:background="@drawable/message_text_holder"
+            android:hint="Enter message"
+            android:textColorHint="#2E2E2E"
+            android:textColor="#272727"
+            android:padding="8dp"
+            android:layout_marginLeft="16dp"
+            android:maxLines="6"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/button_voice"
+            android:layout_marginStart="16dp"
+            android:layout_width="wrap_content"
+            android:layout_toStartOf="@id/button_voice" />
 
         <Button
             android:id="@+id/button_chatbox_send"
             android:text="SEND"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_below="@id/edittext_chatbox"
-            android:layout_gravity="bottom" />
-
-        <Button
-            android:id="@+id/button_voice"
-            android:text="VOICE"
-            android:textSize="14dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_below="@id/edittext_chatbox"
-            android:layout_toRightOf="@id/button_chatbox_send"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="bottom" />
+            android:layout_gravity="bottom"
+            android:focusable="true" />
     </RelativeLayout>
 
 </RelativeLayout>
