@@ -29,6 +29,11 @@ public class Main extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        ClientListen client = new ClientListen(this);
+        new Thread(client).start();
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
