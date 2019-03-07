@@ -32,10 +32,22 @@ public class ClientListen implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //Creating Socket
+        try {
+
+            udpSocket = new DatagramSocket(4488);
+            udpSocket.setSoTimeout(10000); //timeout 10s
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        int n = 0;
+        int nRecCounter = 0;
         while (run) {
+            if(n > 10)
+                run = false;
+            n +=1;
             try {
-                udpSocket = new DatagramSocket(4488);
-                udpSocket.setSoTimeout(10000); //timeout 10s
+                out.println("Waiting for Data...");
                 DatagramPacket packet = new DatagramPacket(message,message.length);
                 Log.i("UDP client: ", "about to wait to receive");
                 udpSocket.receive(packet);
@@ -43,6 +55,12 @@ public class ClientListen implements Runnable {
                 //
 
                 out.print("Received data "+ text);
+
+                nRecCounter +=1;
+                if(nRecCounter >=4)
+                    run = false;
+
+
 
                 //
                 Log.d("Received data", text);
@@ -53,11 +71,21 @@ public class ClientListen implements Runnable {
 
                 //
                 Log.e("UDP client has IOExcept", "error: ", e);
-                run = false;
-            }finally {
-                out.flush();
-                out.close();
+                //run = false;
             }
         }
+
+        try {
+            Thread.sleep(10000);
+            Log.e("UDP Client", "Flushing!");
+            out.flush();
+            out.close();
+            Log.e("UDP Client", "Flushing done!");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+
     }
 }
