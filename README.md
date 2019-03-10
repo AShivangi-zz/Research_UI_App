@@ -21,9 +21,9 @@ Android app for RiSA2S lab (SJSU) UI research
 
 <h3>To-Do </h3>
 <ol>
-  1. Fix disconnect button 
-  2. Fire the text through UDP message
-  3. Make the text not disappear when clicked outside
-  4. Add time to click to the log
-  5. Final cleanup
+  1. Fix disconnect button <br/>
+  2. Fire the text through UDP message<br/>
+  3. Make the text not disappear when clicked outside<br/>
+  4. Add time to click to the log<br/>
+  5. Final cleanup<br/>
 </ol>
