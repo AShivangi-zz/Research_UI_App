@@ -26,19 +26,34 @@ public class Main extends AppCompatActivity {
 
     private long startMilli;
     private long finishMilli;
+    public static boolean s = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //connection thread
+        ClientListen client = new ClientListen();
+        new Thread(client).start();
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         Button button1 = findViewById(R.id.button);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startMilli = System.currentTimeMillis();
-                startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
+                startActivity(new Intent(Main.this, MessageListActivity.class));
+            }
+        });
+
+        //setup button
+        Button setup_btn = findViewById(R.id.button2);
+        setup_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(Main.this, Setup_pop.class), 0);
             }
         });
 
@@ -50,13 +65,37 @@ public class Main extends AppCompatActivity {
 
         final int[] cur = {1};
 
-        Button changeImage = findViewById(R.id.btnChangeImage);
-        changeImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imageView.setImageDrawable(images.get((++cur[0])%3));
+//        Button changeImage = findViewById(R.id.btnChangeImage);
+//        changeImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                imageView.setImageDrawable(images.get((++1)%3));
+//            }
+//        });
+
+        //changes images based on messages
+        while(ClientListen.udpSocket.isConnected()){
+            String msg = "";
+            try {
+                msg = client.getData();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
+            if(msg.equals("STRAIO"))
+                imageView.setImageDrawable(images.get(1));
+            if(msg.equals("STRAIT"))
+                imageView.setImageDrawable(images.get(0));
+            if(msg.equals("RIGHTO"))
+                imageView.setImageDrawable(images.get(2));
+            if(msg.equals("RIGHTT"))
+                imageView.setImageDrawable(images.get(1));
+            if(msg.equals("LEFTTO"))
+                imageView.setImageDrawable(images.get(0));
+            if(msg.equals("LEFTTT"))
+                imageView.setImageDrawable(images.get(2));
+            if(msg.equals("TAEXIT"))
+                imageView.setImageDrawable(images.get(1));
+        }
     }
 
     @Override

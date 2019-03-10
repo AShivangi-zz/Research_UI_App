@@ -13,4 +13,11 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
 
+    <style name="SwitchTheme">
+        <item name="colorPrimary">#303F9F</item>
+        <item name="colorPrimaryDark">#303F9F</item>
+        <item name="colorAccent">#303F9F</item>
+
+    </style>
+
 </resources>
