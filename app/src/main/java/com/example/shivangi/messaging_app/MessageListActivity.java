@@ -3,6 +3,7 @@ package com.example.shivangi.messaging_app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,8 +35,12 @@ public class MessageListActivity extends AppCompatActivity {
 
         mMessageRecycler = findViewById(R.id.reyclerview_message_list);
         final List<BaseMessage> messageList = new ArrayList<>();
-        messageList.add(new BaseMessage("Sara", "Me", "when will you be here?",
-                dateFormat.format(new Date())));
+        if(Main.s) {
+            messageList.add(new BaseMessage("Sara", "Me", "How long will you be?",
+                    dateFormat.format(new Date()))); } else {
+            messageList.add(new BaseMessage("Sara", "Me", "Pepperoni or cheese pizza?",
+                    dateFormat.format(new Date())));
+        }
         setTitle(messageList.get(0).sender);
 
         mMessageAdapter = new MessageListAdapter(this, messageList);
@@ -67,7 +73,9 @@ public class MessageListActivity extends AppCompatActivity {
             }
         });
 
+
         ImageButton voice = findViewById(R.id.button_voice);
+        voice.setVisibility(Main.s? View.VISIBLE : View.GONE);
         voice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

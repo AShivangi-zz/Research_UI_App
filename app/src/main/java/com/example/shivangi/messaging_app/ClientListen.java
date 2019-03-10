@@ -1,91 +1,94 @@
 package com.example.shivangi.messaging_app;
 
-import android.content.Context;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+//import android.content.Context;
+//
+//import java.io.BufferedWriter;
+//import java.io.File;
+//import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.net.*;
-import android.util.Log;
 
+//import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 
 public class ClientListen implements Runnable {
 
-    private DatagramSocket udpSocket;
+    static DatagramSocket udpSocket;
     private boolean run = true;
     private byte[] message = new byte[6];
 
-    private Context mcontext;
-
-    public ClientListen(Context context){
-        mcontext = context;
-    }
-    @Override
-    public void run() {
-        File logFile2 = new File(mcontext.getExternalCacheDir(), "RiSA2S_log2.txt");
-        PrintWriter out = null;
+    public boolean connect(){
+        boolean isAlive = false;
         try {
-            out = new PrintWriter(new BufferedWriter(new FileWriter(logFile2, true)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //Creating Socket
-        try {
-
             udpSocket = new DatagramSocket(4488);
-            udpSocket.setSoTimeout(10000); //timeout 10s
+            udpSocket.setSoTimeout(5000); //timeout 5s
+            isAlive = true;
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        int n = 0;
-        int nRecCounter = 0;
-        while (run) {
-            if(n > 10)
-                run = false;
-            n +=1;
+        return isAlive;
+    }
+
+    public boolean disconnect() {
+        if(udpSocket!= null) {
+            udpSocket.disconnect();
+            return udpSocket.isClosed();
+        }
+        return true;
+    }
+
+    public String getData() throws IOException {
+        DatagramPacket packet = new DatagramPacket(message,message.length);
+        Log.i("UDP client: ", "about to wait to receive");
+        udpSocket.receive(packet);
+        String text = new String(message, 0, packet.getLength());
+        Log.d("Received data", text);
+        return text;
+    }
+
+    @Override
+    public void run() {
+//        File logFile2 = new File(mcontext.getExternalCacheDir(), "RiSA2S_log2.txt");
+//        PrintWriter out = null;
+//        try {
+//            out = new PrintWriter(new BufferedWriter(new FileWriter(logFile2, true)));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        //Creating Socket
+        connect();
+//
+//        int n = 0;
+//        int nRecCounter = 0;
+        while (run) { //~~~~~~~~~~~~~~~~how to break this loop?
+//            if(n > 10)
+//                run = false;
+//            n +=1;
             try {
-                out.println("Waiting for Data...");
-                DatagramPacket packet = new DatagramPacket(message,message.length);
-                Log.i("UDP client: ", "about to wait to receive");
-                udpSocket.receive(packet);
-                String text = new String(message, 0, packet.getLength());
-                //
+                //out.println("Waiting for Data...");
 
-                out.print("Received data "+ text);
+                getData();
+//                out.print("Received data "+ text);
+//                nRecCounter +=1;
+//                if(nRecCounter >=5)
+//                    run = false;
 
-                nRecCounter +=1;
-                if(nRecCounter >=4)
-                    run = false;
-
-
-
-                //
-                Log.d("Received data", text);
             }catch (IOException e) {
-                //
-
-                out.print("UDP client has IOExcept "+ " error: "+ e);
-
-                //
                 Log.e("UDP client has IOExcept", "error: ", e);
-                //run = false;
             }
         }
 
-        try {
-            Thread.sleep(10000);
-            Log.e("UDP Client", "Flushing!");
-            out.flush();
-            out.close();
-            Log.e("UDP Client", "Flushing done!");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-
+        //doesn't reach this yet - remove later
+//        try {
+//            Thread.sleep(10000);
+//            Log.e("UDP Client", "Flushing!");
+//            out.flush();
+//            out.close();
+//            Log.e("UDP Client", "Flushing done!");
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 }

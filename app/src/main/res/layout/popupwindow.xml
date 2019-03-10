@@ -64,21 +64,19 @@
 
         <EditText
             android:id="@+id/edittext_chatbox"
-            android:layout_marginTop="20dp"
+            android:layout_width="290dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/message_text_holder"
             android:hint="Enter message"
-            android:textColorHint="#2E2E2E"
-            android:textColor="#272727"
-            android:padding="8dp"
-            android:layout_marginLeft="16dp"
             android:maxLines="6"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@id/button_voice"
-            android:layout_marginStart="16dp"
-            android:layout_width="wrap_content"
-            android:layout_toStartOf="@id/button_voice" />
+            android:padding="8dp"
+            android:textColor="#272727"
+            android:textColorHint="#2E2E2E" />
 
         <Button
             android:id="@+id/button_chatbox_send"
