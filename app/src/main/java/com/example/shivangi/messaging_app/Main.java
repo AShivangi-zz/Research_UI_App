@@ -1,12 +1,10 @@
 package com.example.shivangi.messaging_app;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.sql.Timestamp;
 
@@ -26,7 +25,9 @@ public class Main extends AppCompatActivity {
 
     private long startMilli;
     private long finishMilli;
-    public static boolean s = true;
+    public static boolean voice_switch = false;
+    public static int test_id = 0;
+    public static int scenario_count = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class Main extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startMilli = System.currentTimeMillis();
-                startActivity(new Intent(Main.this, MessageListActivity.class));
+                startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
             }
         });
 
@@ -107,15 +108,163 @@ public class Main extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Time from one click to next: " + time, Toast.LENGTH_LONG).show();
             File logFile = new File(getExternalCacheDir(), "RiSA2S_log.txt");
             String text = data.getStringExtra("result");
+            long tt_click = data.getLongExtra("time", 0);
             try {
                 PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
-                out.print("[" + new Timestamp(System.currentTimeMillis()) + "] Resp Time: ");
+                out.print("[" + new Timestamp(System.currentTimeMillis()) + "] [TID_count:" + test_id + " " +scenario_count +
+                        "] [" +  reset_flags() + "] Resp Time: ");
+                out.print("Time to voice click: " + (tt_click-startMilli));
                 out.println(Long.toString(time) + " ms, Text: \"" + text + "\"");
+                scenario_count+=1;
                 out.flush();
                 out.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String reset_flags() {
+        List<Integer> A = Arrays.asList(1,7,13,24,30); //C v C m H v H m
+        List<Integer> B = Arrays.asList(2,11,18,29,40); // C v C m H m H v
+        List<Integer> C = Arrays.asList(4,15,27,36,38); //C m C v H v H m
+        List<Integer> D = Arrays.asList(3,14,25,31,32,37); //C m C v H m H v
+        List<Integer> E = Arrays.asList(5,23,26,34,37); //H v H m C v C m
+        List<Integer> F = Arrays.asList(6,9,20,22,33); // H v H m C m C v
+        List<Integer> G = Arrays.asList(8,17,19,21,35); //H m H v C v C m
+        List<Integer> H = Arrays.asList(10,12,16,28,39); //H m H v C m C v
+        if(A.contains(test_id)){
+            if(scenario_count == 1) {
+                voice_switch = false;
+                return "Cv";
+            }
+            if(scenario_count ==2) {
+                voice_switch = true;
+                return "Cm";
+            }
+            if(scenario_count == 3) {
+                voice_switch = false;
+                return "Hv";
+            }
+            if(scenario_count == 4) {
+                return "Hm";
+            }
+        }
+        else if(B.contains(test_id)) { // C v C m H m H v
+            if(scenario_count == 1) {
+                voice_switch = false;
+                return "Cv";
+            }
+            if(scenario_count ==2) {
+                return "Cm";
+            }
+            if(scenario_count == 3) {
+                voice_switch = true;
+                return "Hm";
+            }
+            if(scenario_count == 4) {
+                return "Hv";
+            }
+        }
+        else if(C.contains(test_id)) { //C m C v H v H m
+            if(scenario_count == 1) {
+                voice_switch = true;
+                return "Cm";
+            }
+            if(scenario_count ==2) {
+                return "Cv";
+            }
+            if(scenario_count == 3) {
+                voice_switch = false;
+                return "Hv";
+            }
+            if(scenario_count == 4) {
+                return "Hm";
+            }
+        }
+        else if(D.contains(test_id)) { //C m C v H m H v
+            if(scenario_count == 1) {
+                voice_switch = true;
+                return "Cm";
+            }
+            if(scenario_count == 2) {
+                voice_switch = false;
+                return "Cv";
+            }
+            if(scenario_count == 3) {
+                voice_switch = true;
+                return "Hm";
+            }
+            if(scenario_count == 4) {
+                return "Hv";
+            }
+        }
+        else if(E.contains(test_id)) { //H v H m C v C m
+            if(scenario_count == 1) {
+                voice_switch = false;
+                return "Hv";
+            }
+            if(scenario_count == 2) {
+                voice_switch = true;
+                return "Hm";
+            }
+            if(scenario_count == 3) {
+                voice_switch = false;
+                return "Cv";
+            }
+            if(scenario_count == 4) {
+                return "Cm";
+            }
+        }
+        else if(F.contains(test_id)) { // H v H m C m C v
+            if(scenario_count == 1) {
+                voice_switch = false;
+                return "Hv";
+            }
+            if(scenario_count == 2) {
+                return "Hm";
+            }
+            if(scenario_count == 3) {
+                voice_switch = true;
+                return "Cm";
+            }
+            if(scenario_count == 4) {
+                return "Cv";
+            }
+        }
+        else if(G.contains(test_id)) { //H m H v C v C m
+            if(scenario_count == 1) {
+                voice_switch = true;
+                return "Hm";
+            }
+            if(scenario_count == 2) {
+                return "Hv";
+            }
+            if(scenario_count == 3) {
+                voice_switch = false;
+                return "Cv";
+            }
+            if(scenario_count == 4) {
+                return "Cm";
+            }
+        }
+        else if(H.contains(test_id)) { //H m H v C m C v
+            if(scenario_count == 1) {
+                voice_switch = true;
+                return "Hm";
+            }
+            if(scenario_count == 2) {
+                voice_switch = false;
+                return "Hv";
+            }
+            if(scenario_count == 3) {
+                voice_switch = true;
+                return "Cm";
+            }
+            if(scenario_count == 4) {
+                return "Cv";
+            }
+        }
+        return "";
     }
 }

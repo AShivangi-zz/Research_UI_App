@@ -3,7 +3,6 @@ package com.example.shivangi.messaging_app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +13,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +24,7 @@ public class MessageListActivity extends AppCompatActivity {
     private RecyclerView mMessageRecycler;
     private MessageListAdapter mMessageAdapter;
     private EditText mMessageText;
-    final SimpleDateFormat dateFormat = new SimpleDateFormat("KK:mm:ss a");
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("KK:mm a");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +33,7 @@ public class MessageListActivity extends AppCompatActivity {
 
         mMessageRecycler = findViewById(R.id.reyclerview_message_list);
         final List<BaseMessage> messageList = new ArrayList<>();
-        if(Main.s) {
+        if(Main.voice_switch) {
             messageList.add(new BaseMessage("Sara", "Me", "How long will you be?",
                     dateFormat.format(new Date()))); } else {
             messageList.add(new BaseMessage("Sara", "Me", "Pepperoni or cheese pizza?",
@@ -75,13 +73,20 @@ public class MessageListActivity extends AppCompatActivity {
 
 
         ImageButton voice = findViewById(R.id.button_voice);
-        voice.setVisibility(Main.s? View.VISIBLE : View.GONE);
+        voice.setVisibility(Main.voice_switch? View.VISIBLE : View.GONE);
         voice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH);
+
+                //new code
+                long tt_click = System.currentTimeMillis();
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("time",tt_click);
+                setResult(Activity.RESULT_OK,returnIntent);
+                //
                 startActivityForResult(intent,200);
             }
         });
