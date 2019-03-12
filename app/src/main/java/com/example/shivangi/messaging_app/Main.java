@@ -109,12 +109,16 @@ public class Main extends AppCompatActivity {
             File logFile = new File(getExternalCacheDir(), "RiSA2S_log.txt");
             String text = data.getStringExtra("result");
             long tt_click = data.getLongExtra("time", 0);
+            long tt_click2 = data.getLongExtra("time2", 0);
             try {
                 PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
-                out.print("[" + new Timestamp(System.currentTimeMillis()) + "] [TID_count:" + test_id + " " +scenario_count +
-                        "] [" +  reset_flags() + "] Resp Time: ");
-                out.print("Time to voice click: " + (tt_click-startMilli));
-                out.println(Long.toString(time) + " ms, Text: \"" + text + "\"");
+                out.print("[" + new Timestamp(System.currentTimeMillis()) + "] [TID_count:" + test_id + "_" +scenario_count +
+                        "] [" +  reset_flags() + "] [Total: " + Long.toString(time) + " ms] ");
+                if(tt_click!=0)
+                    out.print("[V: " + Long.toString(tt_click-startMilli)+ " ms] ");
+                if(tt_click2!=0)
+                    out.print("[M: " + Long.toString(tt_click2-startMilli)+ " ms] ");
+                out.println(" Text: \"" + text + "\"");
                 scenario_count+=1;
                 out.flush();
                 out.close();

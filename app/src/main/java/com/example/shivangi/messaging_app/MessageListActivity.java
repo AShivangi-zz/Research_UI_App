@@ -8,6 +8,7 @@ import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -25,11 +26,13 @@ public class MessageListActivity extends AppCompatActivity {
     private MessageListAdapter mMessageAdapter;
     private EditText mMessageText;
     final SimpleDateFormat dateFormat = new SimpleDateFormat("KK:mm a");
+    Intent returnIntent = new Intent();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.popupwindow);
+
 
         mMessageRecycler = findViewById(R.id.reyclerview_message_list);
         final List<BaseMessage> messageList = new ArrayList<>();
@@ -46,6 +49,18 @@ public class MessageListActivity extends AppCompatActivity {
         mMessageRecycler.setAdapter(mMessageAdapter);
 
         mMessageText = findViewById(R.id.edittext_chatbox);
+        //
+        mMessageText.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                long tt_click = System.currentTimeMillis();
+                returnIntent.putExtra("time2",tt_click);
+                setResult(Activity.RESULT_OK,returnIntent);
+                return false;
+            }
+        });
+
         Button mSendButton = findViewById(R.id.button_chatbox_send);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +79,7 @@ public class MessageListActivity extends AppCompatActivity {
                 mMessageAdapter.notifyDataSetChanged();
 
 
-                Intent returnIntent = new Intent();
+
                 returnIntent.putExtra("result",messageText);
                 setResult(Activity.RESULT_OK,returnIntent);
                 finish();
@@ -80,13 +95,9 @@ public class MessageListActivity extends AppCompatActivity {
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH);
-
-                //new code
                 long tt_click = System.currentTimeMillis();
-                Intent returnIntent = new Intent();
                 returnIntent.putExtra("time",tt_click);
                 setResult(Activity.RESULT_OK,returnIntent);
-                //
                 startActivityForResult(intent,200);
             }
         });
