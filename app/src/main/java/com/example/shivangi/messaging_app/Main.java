@@ -69,14 +69,6 @@ public class Main extends AppCompatActivity {
 
         final int[] cur = {1};
 
-//        Button changeImage = findViewById(R.id.btnChangeImage);
-//        changeImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                imageView.setImageDrawable(images.get((++1)%3));
-//            }
-//        });
-
         //changes images based on messages
         while(ClientListen.udpSocket.isConnected()){
             String msg = "";

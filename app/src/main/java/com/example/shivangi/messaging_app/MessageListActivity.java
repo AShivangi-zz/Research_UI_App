@@ -42,14 +42,13 @@ public class MessageListActivity extends AppCompatActivity {
             messageList.add(new BaseMessage("Sara", "Me", "Pepperoni or cheese pizza?",
                     dateFormat.format(new Date())));
         }
-        setTitle(messageList.get(0).sender);
+        setTitle(messageList.get(0).getSender());
 
         mMessageAdapter = new MessageListAdapter(this, messageList);
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
         mMessageRecycler.setAdapter(mMessageAdapter);
 
         mMessageText = findViewById(R.id.edittext_chatbox);
-        //
         mMessageText.setOnTouchListener(new View.OnTouchListener()
         {
             @Override

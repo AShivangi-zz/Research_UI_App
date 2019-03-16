@@ -2,10 +2,10 @@ package com.example.shivangi.messaging_app;
 
 class BaseMessage {
 
-    String sender;
-    String recipient;
-    String message;
-    String time;
+    private String sender;
+    private String recipient;
+    private String message;
+    private String time;
 
     public BaseMessage(String sender, String recipient, String message, String time) {
         this.sender = sender;
