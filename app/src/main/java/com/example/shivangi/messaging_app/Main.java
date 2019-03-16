@@ -2,6 +2,7 @@ package com.example.shivangi.messaging_app;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -40,11 +41,13 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //final MediaPlayer m = MediaPlayer.create(this, R.raw.test1); for audio
         Button button1 = findViewById(R.id.button);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startMilli = System.currentTimeMillis();
+                //m.start(); //for audio
                 startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
             }
         });
@@ -90,9 +93,9 @@ public class Main extends AppCompatActivity {
                 imageView.setImageDrawable(images.get(2));
             if(msg.equals("RIGHTT"))
                 imageView.setImageDrawable(images.get(1));
-            if(msg.equals("LEFTTO"))
+            if(msg.equals("LEFFTO"))
                 imageView.setImageDrawable(images.get(0));
-            if(msg.equals("LEFTTT"))
+            if(msg.equals("LEFFTT"))
                 imageView.setImageDrawable(images.get(2));
             if(msg.equals("TAEXIT"))
                 imageView.setImageDrawable(images.get(1));
