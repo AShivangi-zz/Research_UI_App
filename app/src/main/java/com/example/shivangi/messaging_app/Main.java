@@ -30,6 +30,11 @@ public class Main extends AppCompatActivity {
     public static int test_id = 0;
     public static int scenario_count = 1;
 
+    public ImageView imageView;
+    public static Integer[] mThumbIds = {R.drawable.img1min, R.drawable.img2min, R.drawable.img3min};
+    private int i;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -40,59 +45,121 @@ public class Main extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        imageView = findViewById(R.id.imageView1);
+        i=0;
+        t.start();
 
-        //final MediaPlayer m = MediaPlayer.create(this, R.raw.test1); for audio
-        Button button1 = findViewById(R.id.button);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startMilli = System.currentTimeMillis();
-                //m.start(); //for audio
-                startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
-            }
-        });
+//        //final MediaPlayer m = MediaPlayer.create(this, R.raw.test1); for audio
+//        Button button1 = findViewById(R.id.button);
+//        button1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startMilli = System.currentTimeMillis();
+//                //m.start(); //for audio
+//                startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
+//            }
+//        });
+//
+//        //setup button
+//        Button setup_btn = findViewById(R.id.button2);
+//        setup_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivityForResult(new Intent(Main.this, Setup_pop.class), 0);
+//            }
+//        });
 
-        //setup button
-        Button setup_btn = findViewById(R.id.button2);
-        setup_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(Main.this, Setup_pop.class), 0);
-            }
-        });
 
-        final ImageView imageView = findViewById(R.id.imageView1);
-        final List<Drawable> images = new ArrayList<>(3);
-        images.add(getResources().getDrawable(R.drawable.img1min));
-        images.add(getResources().getDrawable(R.drawable.img2min));
-        images.add(getResources().getDrawable(R.drawable.img3min));
 
-        final int[] cur = {1};
+//        Runnable myRunnable = new Runnable() {
+//        @Override
+//        public void run(){
+//            try {
+//                Thread.sleep(3000);
+//                imageView.setImageDrawable(images.get(1));
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+//            try {
+//                Thread.sleep(3000);
+//                imageView.setImageDrawable(images.get(2));
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+//            try {
+//                Thread.sleep(3000);
+//                imageView.setImageDrawable(images.get(0));
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }}.run();
+
+
+//        for(i = 0; i<images.size(); i++)
+//        {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                    Thread.sleep(3000);
+//                    imageView.setImageDrawable(images.get(i));
+//                }catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                }
+//            });
+//        }
 
         //changes images based on messages
-        while(ClientListen.udpSocket.isConnected()){
-            String msg = "";
-            try {
-                msg = client.getData();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if(msg.equals("STRAIO"))
-                imageView.setImageDrawable(images.get(1));
-            if(msg.equals("STRAIT"))
-                imageView.setImageDrawable(images.get(0));
-            if(msg.equals("RIGHTO"))
-                imageView.setImageDrawable(images.get(2));
-            if(msg.equals("RIGHTT"))
-                imageView.setImageDrawable(images.get(1));
-            if(msg.equals("LEFFTO"))
-                imageView.setImageDrawable(images.get(0));
-            if(msg.equals("LEFFTT"))
-                imageView.setImageDrawable(images.get(2));
-            if(msg.equals("TAEXIT"))
-                imageView.setImageDrawable(images.get(1));
-        }
+//        while(ClientListen.udpSocket.isConnected()){
+//            String msg = "";
+//            try {
+//                msg = client.getData();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            if(msg.equals("STRAIO"))
+//                imageView.setImageDrawable(images.get(1));
+//            if(msg.equals("STRAIT"))
+//                imageView.setImageDrawable(images.get(0));
+//            if(msg.equals("RIGHTO"))
+//                imageView.setImageDrawable(images.get(2));
+//            if(msg.equals("RIGHTT"))
+//                imageView.setImageDrawable(images.get(1));
+//            if(msg.equals("LEFFTO"))
+//                imageView.setImageDrawable(images.get(0));
+//            if(msg.equals("LEFFTT"))
+//                imageView.setImageDrawable(images.get(2));
+//            if(msg.equals("TAEXIT"))
+//                imageView.setImageDrawable(images.get(1));
+//        }
     }
+
+    Thread t = new Thread() {
+        @Override
+        public void run() {
+            try {
+                while (!isInterrupted()) {
+                    Thread.sleep(3000);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageView.setImageResource(mThumbIds[i]);
+                            i++;
+                            if(i >= mThumbIds.length){
+                                t.interrupt();
+                                startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
+                            }
+                        }
+                    });
+                }
+            } catch (InterruptedException e) { }
+        }
+    };
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -100,7 +167,7 @@ public class Main extends AppCompatActivity {
             finishMilli = System.currentTimeMillis();
             long time = finishMilli - startMilli;
             Log.d("TAG", Long.toString(time));
-            Toast.makeText(getApplicationContext(), "Time from one click to next: " + time, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Time from one click to next: " + time, Toast.LENGTH_LONG).show();
             File logFile = new File(getExternalCacheDir(), "RiSA2S_log.txt");
             String text = data.getStringExtra("result");
             long tt_click = data.getLongExtra("time", 0);
