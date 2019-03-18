@@ -26,9 +26,10 @@ public class Main extends AppCompatActivity {
 
     private long startMilli;
     private long finishMilli;
-    public static boolean voice_switch = false;
+    public static boolean voice_switch = true;
     public static int test_id = 0;
     public static int scenario_count = 1;
+    private MediaPlayer m;
 
     public ImageView imageView;
     public static Integer[] mThumbIds = {R.drawable.img1min, R.drawable.img2min, R.drawable.img3min};
@@ -148,10 +149,24 @@ public class Main extends AppCompatActivity {
                         @Override
                         public void run() {
                             imageView.setImageResource(mThumbIds[i]);
+                            if(i==0)
+                                m = MediaPlayer.create(Main.this, R.raw.straight);
+                            if(i==1)
+                                m = MediaPlayer.create(Main.this, R.raw.t_right);
+                            if(i==2)
+                                m = MediaPlayer.create(Main.this, R.raw.t_left);
+                            m.start();
+
                             i++;
                             if(i >= mThumbIds.length){
                                 t.interrupt();
-                                startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
+                                //add a 2 sec delay
+//                                try {
+//                                    Thread.sleep(2000);
+                                    startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
+//                                } catch (InterruptedException e) {
+//                                    e.printStackTrace();
+//                                }
                             }
                         }
                     });
