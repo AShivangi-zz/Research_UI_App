@@ -1,7 +1,6 @@
 package com.example.shivangi.messaging_app;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +15,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.sql.Timestamp;
+
 
 
 public class Main extends AppCompatActivity {
@@ -29,25 +28,28 @@ public class Main extends AppCompatActivity {
     public static boolean voice_switch = false;
     public static int test_id = 0;
     public static int scenario_count = 1;
+    public ImageView imageView;
+    public static Integer[] mThumbIds = {R.drawable.img1min, R.drawable.img2min, R.drawable.img3min};
+    public static boolean newMsg;
+    public static String msg;
+    ClientListen client = new ClientListen();
+    private MediaPlayer m;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         //connection thread
-        ClientListen client = new ClientListen();
         new Thread(client).start();
 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //final MediaPlayer m = MediaPlayer.create(this, R.raw.test1); for audio
         Button button1 = findViewById(R.id.button);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startMilli = System.currentTimeMillis();
-                //m.start(); //for audio
                 startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
             }
         });
@@ -60,39 +62,52 @@ public class Main extends AppCompatActivity {
                 startActivityForResult(new Intent(Main.this, Setup_pop.class), 0);
             }
         });
-
-        final ImageView imageView = findViewById(R.id.imageView1);
-        final List<Drawable> images = new ArrayList<>(3);
-        images.add(getResources().getDrawable(R.drawable.img1min));
-        images.add(getResources().getDrawable(R.drawable.img2min));
-        images.add(getResources().getDrawable(R.drawable.img3min));
-
-        final int[] cur = {1};
-
-        //changes images based on messages
-        while(ClientListen.udpSocket.isConnected()){
-            String msg = "";
-            try {
-                msg = client.getData();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if(msg.equals("STRAIO"))
-                imageView.setImageDrawable(images.get(1));
-            if(msg.equals("STRAIT"))
-                imageView.setImageDrawable(images.get(0));
-            if(msg.equals("RIGHTO"))
-                imageView.setImageDrawable(images.get(2));
-            if(msg.equals("RIGHTT"))
-                imageView.setImageDrawable(images.get(1));
-            if(msg.equals("LEFFTO"))
-                imageView.setImageDrawable(images.get(0));
-            if(msg.equals("LEFFTT"))
-                imageView.setImageDrawable(images.get(2));
-            if(msg.equals("TAEXIT"))
-                imageView.setImageDrawable(images.get(1));
-        }
+        imageView = findViewById(R.id.imageView1);
+//    t.start();
+        changebg();
     }
+
+//    Thread t = new Thread() {
+//        @Override
+//        public void run() {
+//                while (!isInterrupted()) {
+    public void changebg() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //changes images based on messages
+                if (newMsg) {
+                    if (msg.equals("STRAIO")) {
+                        imageView.setImageResource(mThumbIds[0]);
+                        m = MediaPlayer.create(Main.this, R.raw.straight);
+                    } else if (msg.equals("STRAIT")) {
+                        imageView.setImageResource(mThumbIds[1]);
+                        m = MediaPlayer.create(Main.this, R.raw.straight);
+                    } else if (msg.equals("RIGHTO")) {
+                        imageView.setImageResource(mThumbIds[2]);
+                        m = MediaPlayer.create(Main.this, R.raw.t_right);
+                    } else if (msg.equals("RIGHTT")) {
+                        imageView.setImageResource(mThumbIds[0]);
+                        m = MediaPlayer.create(Main.this, R.raw.t_right);
+                    } else if (msg.equals("LEFFTO")) {
+                        imageView.setImageResource(mThumbIds[1]);
+                        m = MediaPlayer.create(Main.this, R.raw.t_left);
+                    } else if (msg.equals("LEFFTT")) {
+                        imageView.setImageResource(mThumbIds[2]);
+                        m = MediaPlayer.create(Main.this, R.raw.t_left);
+                    } else if (msg.equals("TAEXIT")) {
+                        imageView.setImageResource(mThumbIds[0]);
+                        m = MediaPlayer.create(Main.this, R.raw.exit);
+                    }
+                    m.start();
+                    newMsg = false;
+                }
+            }
+        });
+    }
+//                }
+//        }
+//    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

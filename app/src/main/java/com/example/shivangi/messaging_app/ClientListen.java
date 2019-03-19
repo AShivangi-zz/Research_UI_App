@@ -15,7 +15,7 @@ public class ClientListen implements Runnable {
         boolean isAlive = false;
         try {
             udpSocket = new DatagramSocket(4488);
-            udpSocket.setSoTimeout(5000); //timeout 5s
+           // udpSocket.setSoTimeout(10000); //timeout 10s
             isAlive = true;
         } catch (SocketException e) {
             e.printStackTrace();
@@ -37,6 +37,7 @@ public class ClientListen implements Runnable {
         udpSocket.receive(packet);
         String text = new String(message, 0, packet.getLength());
         Log.d("Received data", text);
+        Main.newMsg = true;
         return text;
     }
 
@@ -46,7 +47,7 @@ public class ClientListen implements Runnable {
         connect();
         while (run) { //~~~~~~~~~~~~~~~~how to break this loop?
             try {
-                getData();
+                Main.msg = getData();
             } catch (IOException e) {
                 Log.e("UDP client has IOExcept", "error: ", e);
             }

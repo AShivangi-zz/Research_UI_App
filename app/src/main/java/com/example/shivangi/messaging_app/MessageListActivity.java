@@ -3,6 +3,7 @@ package com.example.shivangi.messaging_app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
@@ -37,10 +38,14 @@ public class MessageListActivity extends AppCompatActivity {
         mMessageRecycler = findViewById(R.id.reyclerview_message_list);
         final List<BaseMessage> messageList = new ArrayList<>();
         if(Main.voice_switch) {
+            final MediaPlayer m = MediaPlayer.create(this, R.raw.incoming);
             messageList.add(new BaseMessage("Sara", "Me", "How long will you be?",
-                    dateFormat.format(new Date()))); } else {
+                    dateFormat.format(new Date())));
+            m.start(); } else {
+            final MediaPlayer m = MediaPlayer.create(this, R.raw.incoming);
             messageList.add(new BaseMessage("Sara", "Me", "Pepperoni or cheese pizza?",
                     dateFormat.format(new Date())));
+            m.start();
         }
         setTitle(messageList.get(0).getSender());
 
@@ -77,7 +82,8 @@ public class MessageListActivity extends AppCompatActivity {
                 messageList.add(message);
                 mMessageAdapter.notifyDataSetChanged();
 
-
+                final MediaPlayer m = MediaPlayer.create(MessageListActivity.this, R.raw.sent);
+                m.start();
 
                 returnIntent.putExtra("result",messageText);
                 setResult(Activity.RESULT_OK,returnIntent);
