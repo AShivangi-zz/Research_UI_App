@@ -32,7 +32,7 @@ public class Main extends AppCompatActivity {
     private MediaPlayer m;
 
     public ImageView imageView;
-    public static Integer[] mThumbIds = {R.drawable.img1min, R.drawable.img2min, R.drawable.img3min};
+    public static Integer[] mThumbIds = {R.drawable.l, R.drawable.s, R.drawable.r};
     private int i;
 
 
@@ -150,11 +150,11 @@ public class Main extends AppCompatActivity {
                         public void run() {
                             imageView.setImageResource(mThumbIds[i]);
                             if(i==0)
-                                m = MediaPlayer.create(Main.this, R.raw.straight);
-                            if(i==1)
-                                m = MediaPlayer.create(Main.this, R.raw.t_right);
-                            if(i==2)
                                 m = MediaPlayer.create(Main.this, R.raw.t_left);
+                            if(i==1)
+                                m = MediaPlayer.create(Main.this, R.raw.straight);
+                            if(i==2)
+                                m = MediaPlayer.create(Main.this, R.raw.t_right);
                             m.start();
 
                             i++;
