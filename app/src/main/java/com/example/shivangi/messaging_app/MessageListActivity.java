@@ -52,12 +52,12 @@ public class MessageListActivity extends AppCompatActivity {
                     dateFormat.format(new Date())));
             m.start(); } else if(Main.msg.equals("MOBRU1")) {
             final MediaPlayer m = MediaPlayer.create(this, R.raw.incoming);
-            messageList.add(new BaseMessage("Sara", "Me", "Pepperoni or cheese pizza?",
+            messageList.add(new BaseMessage("Sara", "Me", "How much longer will it take?",
                     dateFormat.format(new Date())));
             m.start();
         } else if(Main.msg.equals("MOBRU2")) {
             final MediaPlayer m = MediaPlayer.create(this, R.raw.incoming);
-            messageList.add(new BaseMessage("Sara", "Me", "How much longer will it take?",
+            messageList.add(new BaseMessage("Sara", "Me", "Pepperoni or cheese pizza?",
                     dateFormat.format(new Date())));
             m.start();
         }
