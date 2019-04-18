@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MessageListActivity"
-            android:theme="@style/Theme.AppCompat.Dialog"></activity>
+            android:theme="@style/Theme.AppCompat.Dialog.Alert"></activity>
         <activity android:name=".Setup_pop"
             android:theme="@style/Theme.AppCompat.Dialog.Alert"></activity>
     </application>

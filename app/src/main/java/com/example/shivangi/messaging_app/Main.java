@@ -34,7 +34,8 @@ public class Main extends AppCompatActivity {
     public static int test_id = 0;
     public static int scenario_count = 1;
     public static ImageView imageView;
-    public static Integer[] mThumbIds = {R.drawable.final_straight, R.drawable.right, R.drawable.first_left};
+    public static Integer[] mThumbIds = {R.drawable.final_straight, R.drawable.right,
+            R.drawable.first_left, R.drawable.exit};
     public static String msg;
     ClientListen client = new ClientListen();
     public MediaPlayer mediaPlayer;
@@ -71,7 +72,6 @@ public class Main extends AppCompatActivity {
         if (msg.equals("STRAIO")) {
             imageView.setImageResource(mThumbIds[0]);
             prepareMediaPlayer(R.raw.straight);
-            Log.e("Thread", "REACHED");
         } else if (msg.equals("STRAIT")) {
             imageView.setImageResource(mThumbIds[0]);
             prepareMediaPlayer(R.raw.straight);
@@ -81,10 +81,13 @@ public class Main extends AppCompatActivity {
         } else if (msg.equals("LEFFTO")) {
             imageView.setImageResource(mThumbIds[2]);
             prepareMediaPlayer(R.raw.t_left);
+        } else if (msg.equals("FOLHWO")) {
+            imageView.setImageResource(mThumbIds[3]);
+            prepareMediaPlayer(R.raw.exit);
         } else if (msg.equals("LEFFTT")) {
             prepareMediaPlayer(R.raw.take_left);
         } else if (msg.equals("RIGHTT")) {
-            prepareMediaPlayer(R.raw.take_left);
+            prepareMediaPlayer(R.raw.take_right);
         } else if(msg.equals("MOBHI1")) {
             startMilli = System.currentTimeMillis();
             startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
@@ -112,14 +115,6 @@ public class Main extends AppCompatActivity {
         //connection thread
         new Thread(client).start();
 
-//        Button button1 = findViewById(R.id.button);
-//        button1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startMilli = System.currentTimeMillis();
-//                startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
-//            }
-//        });
 
         //setup button
         Button setup_btn = findViewById(R.id.button2);
@@ -146,14 +141,20 @@ public class Main extends AppCompatActivity {
             long tt_click2 = data.getLongExtra("time2", 0);
             try {
                 PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
+                if(!msg.equals("MOBRU1")){
                 out.print("[" + new Timestamp(System.currentTimeMillis()) + "] [TID_count:" + test_id + "_" +scenario_count +
-                        "] [" +  reset_flags() + "] [Total: " + Long.toString(time) + " ms] ");
+                        "] [" +  reset_flags() + "] [Total: " + Long.toString(time) + " ms] ");} else {
+                out.print("[" + new Timestamp(System.currentTimeMillis()) + "] [TID_count:" + test_id + "_" +scenario_count +
+                        "] [" + "] [Total: " + Long.toString(time) + " ms] ");
+                }
+
                 if(tt_click!=0)
                     out.print("[V: " + Long.toString(tt_click-startMilli)+ " ms] ");
                 if(tt_click2!=0)
                     out.print("[M: " + Long.toString(tt_click2-startMilli)+ " ms] ");
                 out.println(" Text: \"" + text + "\"");
-                scenario_count+=1;
+                if(!msg.equals("MOBRU1"))
+                    scenario_count+=1;
                 out.flush();
                 out.close();
             } catch (IOException e) {
@@ -176,7 +177,7 @@ public class Main extends AppCompatActivity {
                 voice_switch = false;
                 return "Cv";
             }
-            if(scenario_count ==2) {
+            if(scenario_count == 2) {
                 voice_switch = true;
                 return "Cm";
             }

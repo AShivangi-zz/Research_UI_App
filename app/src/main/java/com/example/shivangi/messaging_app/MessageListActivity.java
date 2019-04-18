@@ -68,8 +68,6 @@ public class MessageListActivity extends AppCompatActivity {
         mMessageRecycler.setAdapter(mMessageAdapter);
 
         mMessageText = findViewById(R.id.edittext_chatbox);
-//        if(Main.voice_switch)
-//            mMessageText.setEnabled(false);
         mMessageText.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
