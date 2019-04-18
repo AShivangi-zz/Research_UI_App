@@ -1,6 +1,7 @@
 package com.example.shivangi.messaging_app;
 
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,31 +33,93 @@ public class Main extends AppCompatActivity {
     public static boolean voice_switch = false;
     public static int test_id = 0;
     public static int scenario_count = 1;
-    public ImageView imageView;
-    public static Integer[] mThumbIds = {R.drawable.img1min, R.drawable.img2min, R.drawable.img3min};
-    public static boolean newMsg;
+    public static ImageView imageView;
+    public static Integer[] mThumbIds = {R.drawable.final_straight, R.drawable.right, R.drawable.first_left};
     public static String msg;
     ClientListen client = new ClientListen();
-    private MediaPlayer m;
+    public MediaPlayer mediaPlayer;
+
+
+    private void prepareMediaPlayer(int id) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        }
+        mediaPlayer = MediaPlayer.create(this, id);
+        mediaPlayer.start();
+        if (true)
+            return;
+        mediaPlayer = new MediaPlayer();
+
+        AssetFileDescriptor fileDescriptor = getResources().openRawResourceFd(id);
+        try {
+            mediaPlayer.stop();
+            mediaPlayer.setDataSource(fileDescriptor.getFileDescriptor(),
+                    fileDescriptor.getStartOffset(), fileDescriptor.getLength());
+            fileDescriptor.close();
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (Exception e) {
+            Log.e("Main", "On Error: " + e.getMessage());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onServerEvent(ServerEvent event) {
+        final String msg = event.getMessage();
+        Log.v("Main", "Got message: " + msg);
+        if (msg.equals("STRAIO")) {
+            imageView.setImageResource(mThumbIds[0]);
+            prepareMediaPlayer(R.raw.straight);
+            Log.e("Thread", "REACHED");
+        } else if (msg.equals("STRAIT")) {
+            imageView.setImageResource(mThumbIds[0]);
+            prepareMediaPlayer(R.raw.straight);
+        } else if (msg.equals("RIGHTO")) {
+            imageView.setImageResource(mThumbIds[1]);
+            prepareMediaPlayer(R.raw.t_right);
+        } else if (msg.equals("LEFFTO")) {
+            imageView.setImageResource(mThumbIds[2]);
+            prepareMediaPlayer(R.raw.t_left);
+        } else if (msg.equals("LEFFTT")) {
+            prepareMediaPlayer(R.raw.take_left);
+        } else if (msg.equals("RIGHTT")) {
+            prepareMediaPlayer(R.raw.take_left);
+        } else if(msg.equals("MOBHI1")) {
+            startMilli = System.currentTimeMillis();
+            startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
+        } else if(msg.equals("MOBRU1")) {
+            startMilli = System.currentTimeMillis();
+            startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
+        } else if(msg.equals("MOBRU2")) {
+            startMilli = System.currentTimeMillis();
+            startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        //connection thread
-        new Thread(client).start();
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button1 = findViewById(R.id.button);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startMilli = System.currentTimeMillis();
-                startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
-            }
-        });
+        EventBus.getDefault().register(this);
+        //connection thread
+        new Thread(client).start();
+
+//        Button button1 = findViewById(R.id.button);
+//        button1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startMilli = System.currentTimeMillis();
+//                startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
+//            }
+//        });
 
         //setup button
         Button setup_btn = findViewById(R.id.button2);
@@ -63,51 +130,8 @@ public class Main extends AppCompatActivity {
             }
         });
         imageView = findViewById(R.id.imageView1);
-//    t.start();
-        changebg();
     }
 
-//    Thread t = new Thread() {
-//        @Override
-//        public void run() {
-//                while (!isInterrupted()) {
-    public void changebg() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //changes images based on messages
-                if (newMsg) {
-                    if (msg.equals("STRAIO")) {
-                        imageView.setImageResource(mThumbIds[0]);
-                        m = MediaPlayer.create(Main.this, R.raw.straight);
-                    } else if (msg.equals("STRAIT")) {
-                        imageView.setImageResource(mThumbIds[1]);
-                        m = MediaPlayer.create(Main.this, R.raw.straight);
-                    } else if (msg.equals("RIGHTO")) {
-                        imageView.setImageResource(mThumbIds[2]);
-                        m = MediaPlayer.create(Main.this, R.raw.t_right);
-                    } else if (msg.equals("RIGHTT")) {
-                        imageView.setImageResource(mThumbIds[0]);
-                        m = MediaPlayer.create(Main.this, R.raw.t_right);
-                    } else if (msg.equals("LEFFTO")) {
-                        imageView.setImageResource(mThumbIds[1]);
-                        m = MediaPlayer.create(Main.this, R.raw.t_left);
-                    } else if (msg.equals("LEFFTT")) {
-                        imageView.setImageResource(mThumbIds[2]);
-                        m = MediaPlayer.create(Main.this, R.raw.t_left);
-                    } else if (msg.equals("TAEXIT")) {
-                        imageView.setImageResource(mThumbIds[0]);
-                        m = MediaPlayer.create(Main.this, R.raw.exit);
-                    }
-                    m.start();
-                    newMsg = false;
-                }
-            }
-        });
-    }
-//                }
-//        }
-//    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -115,7 +139,7 @@ public class Main extends AppCompatActivity {
             finishMilli = System.currentTimeMillis();
             long time = finishMilli - startMilli;
             Log.d("TAG", Long.toString(time));
-            Toast.makeText(getApplicationContext(), "Time from one click to next: " + time, Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "Time from one click to next: " + time, Toast.LENGTH_LONG).show();
             File logFile = new File(getExternalCacheDir(), "RiSA2S_log.txt");
             String text = data.getStringExtra("result");
             long tt_click = data.getLongExtra("time", 0);

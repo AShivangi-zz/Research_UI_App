@@ -2,7 +2,10 @@ package com.example.shivangi.messaging_app;
 
 import java.io.IOException;
 import java.net.*;
+import java.sql.Timestamp;
 import android.util.Log;
+
+import org.greenrobot.eventbus.EventBus;
 
 
 public class ClientListen implements Runnable {
@@ -14,8 +17,7 @@ public class ClientListen implements Runnable {
     public boolean connect(){
         boolean isAlive = false;
         try {
-            udpSocket = new DatagramSocket(4488);
-           // udpSocket.setSoTimeout(10000); //timeout 10s
+            udpSocket = new DatagramSocket(5050); //CHANGE PORT
             isAlive = true;
         } catch (SocketException e) {
             e.printStackTrace();
@@ -32,12 +34,12 @@ public class ClientListen implements Runnable {
     }
 
     public String getData() throws IOException {
-        DatagramPacket packet = new DatagramPacket(message,message.length);
-        Log.i("UDP client: ", "about to wait to receive");
+        DatagramPacket packet = new DatagramPacket(message, message.length);
+        Log.d("UDP client: ", "about to wait to receive");
         udpSocket.receive(packet);
         String text = new String(message, 0, packet.getLength());
         Log.d("Received data", text);
-        Main.newMsg = true;
+        EventBus.getDefault().post(new ServerEvent(text));
         return text;
     }
 
@@ -45,7 +47,7 @@ public class ClientListen implements Runnable {
     public void run() {
         //Creating Socket
         connect();
-        while (run) { //~~~~~~~~~~~~~~~~how to break this loop?
+        while (run) {
             try {
                 Main.msg = getData();
             } catch (IOException e) {

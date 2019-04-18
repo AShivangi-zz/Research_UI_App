@@ -29,37 +29,37 @@ public class Setup_pop extends Activity {
         getWindow().setLayout((int)(width*0.8), (int)(height*0.6));
 
         //connect button
-        Button connect = findViewById(R.id.button3);
-        connect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                try {
-                    client.connect();
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if(client.connect())
-                    Toast.makeText(getApplicationContext(), "Connected" , Toast.LENGTH_SHORT).show();
-
-                else
-                    Toast.makeText(getApplicationContext(), "Not connected" , Toast.LENGTH_SHORT).show();
-            }
-        });
+//        Button connect = findViewById(R.id.button3);
+//        connect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                try {
+//                    client.connect();
+//                    Thread.sleep(5000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                if(client.connect())
+//                    Toast.makeText(getApplicationContext(), "Connected" , Toast.LENGTH_SHORT).show();
+//
+//                else
+//                    Toast.makeText(getApplicationContext(), "Not connected" , Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         //disconnect button
-        Button disconnect = findViewById(R.id.button4);
-        disconnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(client.disconnect())
-                    Toast.makeText(getApplicationContext(), "Disconnected" , Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(getApplicationContext(), "Still connected" , Toast.LENGTH_SHORT).show();
-            }
-        });
+//        Button disconnect = findViewById(R.id.button4);
+//        disconnect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(client.disconnect())
+//                    Toast.makeText(getApplicationContext(), "Disconnected" , Toast.LENGTH_SHORT).show();
+//                else
+//                    Toast.makeText(getApplicationContext(), "Still connected" , Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         //testID
         final EditText testID = findViewById(R.id.testId);

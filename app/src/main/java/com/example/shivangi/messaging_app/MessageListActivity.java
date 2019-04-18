@@ -37,13 +37,18 @@ public class MessageListActivity extends AppCompatActivity {
 
         mMessageRecycler = findViewById(R.id.reyclerview_message_list);
         final List<BaseMessage> messageList = new ArrayList<>();
-        if(Main.voice_switch) {
+        if(Main.msg.equals("MOBHI1")) {
             final MediaPlayer m = MediaPlayer.create(this, R.raw.incoming);
             messageList.add(new BaseMessage("Sara", "Me", "How long will you be?",
                     dateFormat.format(new Date())));
-            m.start(); } else {
+            m.start(); } else if(Main.msg.equals("MOBRU1")) {
             final MediaPlayer m = MediaPlayer.create(this, R.raw.incoming);
             messageList.add(new BaseMessage("Sara", "Me", "Pepperoni or cheese pizza?",
+                    dateFormat.format(new Date())));
+            m.start();
+        } else if(Main.msg.equals("MOBRU2")) {
+            final MediaPlayer m = MediaPlayer.create(this, R.raw.incoming);
+            messageList.add(new BaseMessage("Sara", "Me", "How much longer will it take?",
                     dateFormat.format(new Date())));
             m.start();
         }
@@ -54,6 +59,8 @@ public class MessageListActivity extends AppCompatActivity {
         mMessageRecycler.setAdapter(mMessageAdapter);
 
         mMessageText = findViewById(R.id.edittext_chatbox);
+//        if(Main.voice_switch)
+//            mMessageText.setEnabled(false);
         mMessageText.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
