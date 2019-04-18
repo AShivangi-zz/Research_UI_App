@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,11 +30,19 @@ public class MessageListActivity extends AppCompatActivity {
     final SimpleDateFormat dateFormat = new SimpleDateFormat("KK:mm a");
     Intent returnIntent = new Intent();
 
+
+    public void setWindowParams() {
+        WindowManager.LayoutParams wlp = getWindow().getAttributes();
+        wlp.dimAmount = 0;
+        wlp.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+        getWindow().setAttributes(wlp);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.popupwindow);
-
+        setWindowParams();
 
         mMessageRecycler = findViewById(R.id.reyclerview_message_list);
         final List<BaseMessage> messageList = new ArrayList<>();
