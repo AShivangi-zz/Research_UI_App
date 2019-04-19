@@ -77,17 +77,20 @@ public class Main extends AppCompatActivity {
             prepareMediaPlayer(R.raw.straight);
         } else if (msg.equals("RIGHTO")) {
             imageView.setImageResource(mThumbIds[1]);
-            prepareMediaPlayer(R.raw.t_right);
+            prepareMediaPlayer(R.raw.take_right);
         } else if (msg.equals("LEFFTO")) {
             imageView.setImageResource(mThumbIds[2]);
-            prepareMediaPlayer(R.raw.t_left);
-        } else if (msg.equals("FOLHWO")) {
+            prepareMediaPlayer(R.raw.take_left);
+        } else if (msg.equals("TAEXIT")) {
             imageView.setImageResource(mThumbIds[3]);
             prepareMediaPlayer(R.raw.exit);
+        } else if (msg.equals("FOLHWO")) {
+            imageView.setImageResource(mThumbIds[0]); //change this
+            prepareMediaPlayer(R.raw.exit);
         } else if (msg.equals("LEFFTT")) {
-            prepareMediaPlayer(R.raw.take_left);
+            prepareMediaPlayer(R.raw.t_left);
         } else if (msg.equals("RIGHTT")) {
-            prepareMediaPlayer(R.raw.take_right);
+            prepareMediaPlayer(R.raw.t_right);
         } else if(msg.equals("MOBHI1")) {
             startMilli = System.currentTimeMillis();
             startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);

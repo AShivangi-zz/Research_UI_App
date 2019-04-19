@@ -17,7 +17,7 @@ public class ClientListen implements Runnable {
     public boolean connect(){
         boolean isAlive = false;
         try {
-            udpSocket = new DatagramSocket(5050); //CHANGE PORT
+            udpSocket = new DatagramSocket(4488); //5050 for testing
             isAlive = true;
         } catch (SocketException e) {
             e.printStackTrace();
