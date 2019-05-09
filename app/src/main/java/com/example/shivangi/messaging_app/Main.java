@@ -35,10 +35,11 @@ public class Main extends AppCompatActivity {
     public static int scenario_count = 1;
     public static ImageView imageView;
     public static Integer[] mThumbIds = {R.drawable.final_straight, R.drawable.right,
-            R.drawable.first_left, R.drawable.exit};
+            R.drawable.first_left, R.drawable.exit, R.drawable.highway_straight};
     public static String msg;
     ClientListen client = new ClientListen();
     public MediaPlayer mediaPlayer;
+    public String prev_msg = ""; // to ignore repeating messages
 
 
     private void prepareMediaPlayer(int id) {
@@ -69,6 +70,8 @@ public class Main extends AppCompatActivity {
     public void onServerEvent(ServerEvent event) {
         final String msg = event.getMessage();
         Log.v("Main", "Got message: " + msg);
+        if(prev_msg.equals(msg))
+            return;
         if (msg.equals("STRAIO")) {
             imageView.setImageResource(mThumbIds[0]);
             prepareMediaPlayer(R.raw.straight);
@@ -85,8 +88,8 @@ public class Main extends AppCompatActivity {
             imageView.setImageResource(mThumbIds[3]);
             prepareMediaPlayer(R.raw.exit);
         } else if (msg.equals("FOLHWO")) {
-            imageView.setImageResource(mThumbIds[0]); //change this
-            prepareMediaPlayer(R.raw.exit);
+            imageView.setImageResource(mThumbIds[4]);
+            prepareMediaPlayer(R.raw.straight);
         } else if (msg.equals("LEFFTT")) {
             prepareMediaPlayer(R.raw.t_left);
         } else if (msg.equals("RIGHTT")) {
@@ -101,6 +104,8 @@ public class Main extends AppCompatActivity {
             startMilli = System.currentTimeMillis();
             startActivityForResult(new Intent(Main.this, MessageListActivity.class), 0);
         }
+
+        prev_msg = msg;
     }
 
     @Override
